@@ -7,6 +7,7 @@ import Floor from "./Floor";
 import { borderWidth } from "../untils/constant";
 import { NaiveBroadphase } from "cannon-es";
 import { BodyMaterial } from "../untils/bodyMaterial";
+import { useAppStore } from "../store";
 
 const ThreeContent = () => {
 	const w = borderWidth;
@@ -30,22 +31,23 @@ const ThreeContent = () => {
 				gravity={[0, 0, -9.8 * 20]}
 				solver-iterations={20}
 				broadphase={"Naive"}
+				allowSleep
 			>
-				<Debug scale={1.0} color={"blue"}>
-					<mesh position={[0, 0, -1]}>
-						<planeGeometry args={[100, 100, 1, 1]} />
-						<meshPhongMaterial />
-					</mesh>
+				{/* <Debug scale={1.0} color={"blue"}> */}
+				<mesh position={[0, 0, -1]}>
+					<planeGeometry args={[100, 100, 1, 1]} />
+					<meshPhongMaterial />
+				</mesh>
 
-					<Bounds fit clip observe damping={6} margin={1.05}>
-						<Floor />
-					</Bounds>
-					<Dices />
-					<Walls />
-				</Debug>
+				<Bounds fit clip observe damping={6} margin={1.1}>
+					<Floor />
+				</Bounds>
+				<Dices />
+				<Walls />
+				{/* </Debug> */}
 				<BodyMaterial />
 			</Physics>
-			<OrbitControls />
+			{/* <OrbitControls /> */}
 		</>
 	);
 };
