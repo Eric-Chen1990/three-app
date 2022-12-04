@@ -3,7 +3,6 @@ import ThreeContent from "./components/ThreeContent";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { useAppStore } from "./store";
-import ThreeContent1 from "./components/ThreeContent copy";
 
 function App() {
 	const Throw = useAppStore((state) => state.Throw);
@@ -21,7 +20,7 @@ function App() {
 						<ThreeContent />
 					</Suspense>
 				</Canvas>
-				{/* <ThreeContent1 /> */}
+
 				<button className="btn" id="throw-btn" onClick={Throw}>
 					Throw dice
 				</button>

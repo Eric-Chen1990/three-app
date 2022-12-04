@@ -4,8 +4,8 @@ import React from "react";
 import { boardWidth, borderWidth } from "../untils/constant";
 
 const Walls = () => {
-    const argsX = [boardWidth + borderWidth * 2, borderWidth, borderWidth * 4];
-		const argsY = [boardWidth, borderWidth, borderWidth * 4];
+    const argsX = [boardWidth + borderWidth * 2, borderWidth, borderWidth * 2];
+		const argsY = [boardWidth, borderWidth, borderWidth * 2];
 		const boardTexture = useTexture("./img/wood-texture.jpg");
 		const [topRef, api1] = useBox(() => ({
 			type: "Static",

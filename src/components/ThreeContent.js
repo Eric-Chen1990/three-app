@@ -4,14 +4,18 @@ import Walls from "./Walls";
 import * as THREE from "three";
 import Dices from "./Dices";
 import Floor from "./Floor";
-import { borderWidth } from "../untils/constant";
+import { borderWidth, boxSize } from "../untils/constant";
 import { NaiveBroadphase } from "cannon-es";
 import { BodyMaterial } from "../untils/bodyMaterial";
-import { useAppStore } from "../store";
+import { useAppStore, useBoxStore } from "../store";
+import Boxes from "./Boxes";
 
 const ThreeContent = () => {
 	const w = borderWidth;
-
+	const pressed = useBoxStore((state) => state.pressed);
+	const handleMove = (e) => {
+		pressed && pressed.position.set(e.point.x, e.point.y, boxSize / 2);
+	};
 	return (
 		<>
 			<ambientLight intensity={1.3} color={0x707070} />
@@ -34,7 +38,7 @@ const ThreeContent = () => {
 				allowSleep
 			>
 				{/* <Debug scale={1.0} color={"blue"}> */}
-				<mesh position={[0, 0, -1]}>
+				<mesh position={[0, 0, -1]} onPointerMove={handleMove}>
 					<planeGeometry args={[100, 100, 1, 1]} />
 					<meshPhongMaterial />
 				</mesh>
@@ -44,6 +48,7 @@ const ThreeContent = () => {
 				</Bounds>
 				<Dices />
 				<Walls />
+				<Boxes />
 				{/* </Debug> */}
 				<BodyMaterial />
 			</Physics>

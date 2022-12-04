@@ -1,12 +1,13 @@
 import { useBox } from "@react-three/cannon";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAppStore } from "../store";
 import Dice from "./Dice";
 import { boardWidth, diceSize } from "../untils/constant";
 import * as CANNON from "cannon-es";
 import { diceBodyMaterial } from "../untils/bodyMaterial";
 import * as THREE from "three";
-
+let finishCount = 0;
+const diceArr = [];
 const Dices = () => {
 	const isThrow = useAppStore((state) => state.isThrow);
 	const reset = useAppStore((state) => state.reset);
@@ -32,6 +33,8 @@ const Dices = () => {
 	}, [isThrow]);
 
 	const throwDice = (x, y, velocity) => {
+		finishCount = 0;
+		document.getElementById("result").style.display = "none";
 		let boardX = (boardWidth / 2) * x * 0.95;
 		let boardY = (boardWidth / 2) * y * 0.95;
 
@@ -74,6 +77,31 @@ const Dices = () => {
 
 			api.velocity.copy(velocityVector);
 			api.angularVelocity.set(0, 0, 0);
+
+			const unsub_velocity = api.velocity.subscribe((v) => {
+				if (v[0] === 0 && v[1] === 0 && v[2] === 0) {
+					diceArr[i] = {};
+					finishCount++;
+					if (finishCount === 3) {
+						setTimeout(() => {
+							calcDiceResult();
+						}, 100);
+					}
+					unsub_velocity();
+				}
+			});
+			const unsub_position = api.position.subscribe((v) => {
+				if (finishCount === 3 && diceArr[i]) {
+					diceArr[i].position = v;
+					unsub_position();
+				}
+			});
+			const unsub_quaternion = api.quaternion.subscribe((v) => {
+				if (finishCount === 3 && diceArr[i]) {
+					diceArr[i].quaternion = v;
+					unsub_quaternion();
+				}
+			});
 		}
 	};
 
@@ -94,44 +122,52 @@ const Dices = () => {
 
 		let result = [];
 
-		// this.diceArr.forEach((dice, i) => {
-		// 	tempMesh.position.copy(dice.body.position);
-		// 	tempMesh.quaternion.copy(dice.body.quaternion);
+		diceArr.forEach((dice, i) => {
+			tempMesh.position.set(...dice.position);
+			tempMesh.quaternion.set(...dice.quaternion);
+			// console.log(dice.quaternion);
+			let vector = new THREE.Vector3(0, 0, 1);
+			let closestIndex;
+			let closestAngle = Math.PI * 2;
 
-		// 	let vector = new THREE.Vector3(0, 0, 1);
-		// 	let closestIndex;
-		// 	let closestAngle = Math.PI * 2;
+			let normals = tempMesh.geometry.getAttribute("normal").array;
 
-		// 	let normals = tempMesh.geometry.getAttribute("normal").array;
+			let length = normals.length;
+			let normal = new THREE.Vector3();
 
-		// 	let length = normals.length;
-		// 	let normal = new THREE.Vector3();
+			for (let i = 0; i < length; i += 3) {
+				let index = i / 3;
 
-		// 	for (let i = 0; i < length; i += 3) {
-		// 		let index = i / 3;
+				normal.set(normals[i], normals[i + 1], normals[i + 2]);
 
-		// 		normal.set(normals[i], normals[i + 1], normals[i + 2]);
+				let angle = normal
+					.clone()
+					.set(...dice.quaternion)
+					.angleTo(vector);
 
-		// 		let angle = normal
-		// 			.clone()
-		// 			.applyQuaternion(dice.body.quaternion)
-		// 			.angleTo(vector);
+				if (angle < closestAngle) {
+					closestAngle = angle;
+					closestIndex = index;
+				}
+			}
 
-		// 		if (angle < closestAngle) {
-		// 			closestAngle = angle;
-		// 			closestIndex = index;
-		// 		}
-		// 	}
+			for (let number in indexToResult) {
+				if (indexToResult[number].indexOf(closestIndex) !== -1) {
+					result.push(number);
+					break;
+				}
+			}
+		});
+		// console.log(result);
+		const sum = result.reduce(
+			(previousValue, currentValue) =>
+				parseInt(previousValue) + parseInt(currentValue),
+			0
+		);
 
-		// 	for (let number in indexToResult) {
-		// 		if (indexToResult[number].indexOf(closestIndex) !== -1) {
-		// 			result.push(number);
-		// 			break;
-		// 		}
-		// 	}
-		// });
-
-		return result;
+		document.getElementById("result").style.display = "flex";
+		document.getElementById("result-value").innerText =
+			result.join(" + ") + " = " + sum;
 	};
 
 	return (
