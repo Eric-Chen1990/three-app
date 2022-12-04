@@ -4,16 +4,20 @@ import { useAppStore } from "../store";
 import Dice from "./Dice";
 import { boardWidth, diceSize } from "../untils/constant";
 import * as CANNON from "cannon-es";
+import { diceBodyMaterial } from "../untils/bodyMaterial";
 
 const Dices = () => {
 	const isThrow = useAppStore((state) => state.isThrow);
 	const reset = useAppStore((state) => state.reset);
 	const settings = {
 		mass: 1,
+		type: "Dynamic",
+		material: diceBodyMaterial,
 		position: [0, 0, 1],
 		sleepTimeLimit: 0.01,
 		linearDamping: 0.1,
 		angularDamping: 0.1,
+		args: [diceSize, diceSize, diceSize],
 	};
 	const [dice1, api1] = useBox(() => ({ ...settings }));
 	const [dice2, api2] = useBox(() => ({ ...settings }));
@@ -21,7 +25,6 @@ const Dices = () => {
 
 	useEffect(() => {
 		if (isThrow) {
-			console.log(isThrow);
 			throwDice(-1, -1, 4);
 			reset();
 		}

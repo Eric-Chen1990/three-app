@@ -55,20 +55,20 @@ class DiceGame {
 		this.diceBodyMaterial = new CANNON.Material();
 		this.floorBodyMaterial = new CANNON.Material();
 
-		this.world.addContactMaterial(
-			new CANNON.ContactMaterial(
-				this.floorBodyMaterial,
-				this.diceBodyMaterial,
-				{ friction: 0.01, restitution: 0.4 }
-			)
-		);
+		// this.world.addContactMaterial(
+		// 	new CANNON.ContactMaterial(
+		// 		this.floorBodyMaterial,
+		// 		this.diceBodyMaterial,
+		// 		{ friction: 0.01, restitution: 0.4 }
+		// 	)
+		// );
 
-		this.world.addContactMaterial(
-			new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, {
-				friction: 0.01,
-				restitution: 0.4,
-			})
-		);
+		// this.world.addContactMaterial(
+		// 	new CANNON.ContactMaterial(this.diceBodyMaterial, this.diceBodyMaterial, {
+		// 		friction: 0.01,
+		// 		restitution: 0.4,
+		// 	})
+		// );
 
 		this._loadResources(() => {
 			this._createBoard();
@@ -657,12 +657,12 @@ class DiceGame {
 			velocityVector.normalize();
 			velocityVector = velocityVector.scale(velocity * 10);
 
-			// dice.body.quaternion = new CANNON.Quaternion(
-			// 	(45 * Math.PI) / 180,
-			// 	0,
-			// 	(70 * Math.PI) / 180,
-			// 	1
-			// );
+			dice.body.quaternion = new CANNON.Quaternion(
+				(45 * Math.PI) / 180,
+				0,
+				(70 * Math.PI) / 180,
+				1
+			);
 
 			dice.body.velocity.copy(velocityVector);
 			dice.body.angularVelocity.set(0, 0, 0);
