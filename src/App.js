@@ -15,7 +15,7 @@ function App() {
 					shadows
 					camera={{ fov: 40, near: 5, far: 100, position: [0, 0, 5] }}
 				>
-					<axesHelper />
+					{/* <axesHelper /> */}
 					<Suspense fallback={null}>
 						<ThreeContent />
 					</Suspense>

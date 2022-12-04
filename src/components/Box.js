@@ -11,7 +11,7 @@ const Box = (props) => {
 	const boxTexture = useTexture("./img/cement.jpg");
 	const [ref, api] = useBox(() => ({
 		type: "Static",
-		args: [[boxSize, boxSize, boxSize]],
+		args: [boxSize, boxSize, boxSize],
 		material: floorBodyMaterial,
 		allowSleep: false,
 		...props,

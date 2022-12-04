@@ -1,13 +1,13 @@
 import { Bounds, OrbitControls } from "@react-three/drei";
-import { Debug, Physics, useBox } from "@react-three/cannon";
+import { Debug, Physics } from "@react-three/cannon";
 import Walls from "./Walls";
 import * as THREE from "three";
 import Dices from "./Dices";
 import Floor from "./Floor";
 import { borderWidth, boxSize } from "../untils/constant";
-import { NaiveBroadphase } from "cannon-es";
+
 import { BodyMaterial } from "../untils/bodyMaterial";
-import { useAppStore, useBoxStore } from "../store";
+import { useBoxStore } from "../store";
 import Boxes from "./Boxes";
 
 const ThreeContent = () => {
